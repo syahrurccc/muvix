@@ -1,0 +1,13 @@
+{% extends "muvix/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="now-playing-view">
+    </div>
+    <div id="coming-soon-view">
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'muvix/index.js' %}"></script>
+{% endblock %}
