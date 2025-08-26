@@ -9,5 +9,13 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'muvix/index.js' %}"></script>
+    <script type="module">
+        import { viewMovies } from "{% static 'muvix/index.js' %}";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(location.search);
+            const initial = params.get('tab') === 'soon' ? 'soon' : 'playing';
+            viewMovies(initial)
+        });
+    </script>
 {% endblock %}

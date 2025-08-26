@@ -28,6 +28,29 @@ def fetch_movies(request, type):
 
 
 def movie_view(request, movie_id):
+    
+    try:
+        movie_data = Movie.objects.get(id=movie_id)
+    except Movie.DoesNotExist:
+        return HttpResponseRedirect("/")
+
+    return render(request, "muvix/show.html", {
+        "is_playing": movie_data.status == Movie.Status.PLAYING,
+        "id": movie_data.id,
+        "title": movie_data.title,
+        "trailer": movie_data.trailer,
+        "poster_url": movie_data.poster_url,
+        "synopsis": movie_data.synopsis,
+        "duration": movie_data.duration_min,
+        "rating_avg": movie_data.rating_avg,
+        "rating_count": movie_data.rating_count,
+        "theater": movie_data.shows.theater,
+
+    })
+
+
+@login_required(login_url="/login")
+def my_tickets(request):
     ...
 
 

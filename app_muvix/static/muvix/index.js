@@ -1,16 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#now-playing').addEventListener('click', () => viewMovies('playing'));
-    document.querySelector('#coming-soon').addEventListener('click', () => viewMovies('soon'));
-
-    viewMovies('playing');
-})
-
-async function viewMovies(type) {
+export async function viewMovies(type) {
 
     const isPlayingView = type === 'playing';
     
     document.querySelector('#now-playing-view').innerHTML = '';
     document.querySelector('#coming-soon-view').innerHTML = '';
+
+    document.querySelector('#now-playing-view').style.display = isPlayingView ? 'block' : 'none';
+    document.querySelector('#coming-soon-view').style.display = isPlayingView ? 'none' : 'block';
 
     try {
 
@@ -38,19 +34,22 @@ async function viewMovies(type) {
             const trailerBtn = document.createElement('a');
             trailerBtn.className = 'trailer-btn';
             trailerBtn.href = `${movie.trailer}`;
+            trailerBtn.textContent = 'Watch Trailer';
+            trailerBtn.target = '_blank';
+            trailerBtn.rel = 'noopener noreferrer';
 
             const bookBtn = document.createElement('a');
             bookBtn.className = 'book-btn'
             bookBtn.href = `/movies/${movie.id}`;
+            bookBtn.textContent = 'Get Ticket';
 
-            movieCard.append(poster, bookBtn);
+            movieCard.append(poster, trailerBtn, bookBtn);
             movieContainer.append(movieCard);
         });
 
-        document.querySelector(isPlayingView ? '#now-playing-view' : 'coming-soon-view').append(movieContainer);
+        document.querySelector(isPlayingView ? '#now-playing-view' : '#coming-soon-view').append(movieContainer);
 
     } catch(error) {
-
+        console.error(error)
     }
-
 }

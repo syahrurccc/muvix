@@ -29,10 +29,10 @@ class Movie(models.Model):
         SOON = "Coming Soon"
 
     title = models.CharField(max_length=128)
-    poster_url = models.URLField()
-    synopsis = models.TextField()
+    poster_url = models.URLField(blank=True)
+    synopsis = models.TextField(blank=True)
     trailer = models.URLField(blank=True)
-    duration_min = models.IntegerField()
+    duration_min = models.CharField(default="TBA", blank=True)
     rating_avg = models.DecimalField(default=Decimal(0.00), max_digits=3, decimal_places=2, editable=False)
     rating_count = models.PositiveIntegerField(default=0, editable=False)
     status = models.CharField(max_length=12, choices=Status.choices)
@@ -60,7 +60,7 @@ class Rating(models.Model):
 
 
 class Show(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="shows")
     theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
     starts_at = models.DateTimeField()
     price = models.DecimalField(max_digits=5, decimal_places=2)

@@ -5,30 +5,32 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link href="{% static 'muvix/styles.css' %}" rel="stylesheet">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
             <title>Muvix</title>
+            <link href="{% static 'muvix/index.css' %}" rel="stylesheet">
+            <script type="module" src="{% static 'muvix/base.js' %}"></script>
+            {% block stylings %}{% endblock %}
             {% block script %}
             {% endblock %}
         </head>
     <body data-user="{{ request.user }}">
         
         <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="/">Muvix</a>
+            <a class="navbar-brand" href="/"><img src="{% static 'muvix/muvix.png' %}"></a>
             
             <ul class="navbar-nav">
                 <div class="nav-center">
-                    <a class="nav-link" id="now-playing">Now Playing</a>
-                    <a class="nav-link" id="coming-soon">Coming Soon</a>
+                    <a class="nav-link" id="now-playing" href="/" data-page="playing">Now Playing</a>
+                    <a class="nav-link" id="coming-soon" href="/" data-page="soon">Coming Soon</a>
                 </div>
 
                 <div class="auth">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" id="current-user"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link" href="{% url 'tickets' %}">My Tickets</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
