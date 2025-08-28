@@ -10,8 +10,6 @@ class User(AbstractUser):
 
 class Theater(models.Model):
     name = models.CharField(max_length=12)
-    rows = models.IntegerField()
-    cols = models.IntegerField()
     seat_map_json = models.JSONField(default=dict)
 
 
@@ -30,6 +28,9 @@ class Movie(models.Model):
 
     title = models.CharField(max_length=128)
     poster_url = models.URLField(blank=True)
+    director = models.CharField(max_length=128, blank=True)
+    stars = models.CharField(max_length=128, blank=True)
+    genre = models.CharField(max_length=128, blank=True)
     synopsis = models.TextField(blank=True)
     trailer = models.URLField(blank=True)
     duration_min = models.CharField(default="TBA", blank=True)
@@ -41,6 +42,9 @@ class Movie(models.Model):
         return {
             "id": self.id,
             "title": self.title,
+            "director": self.director,
+            "stars": self.stars,
+            "genre": self.genre,
             "trailer": self.trailer,
             "poster_url": self.poster_url,
             "synopsis": self.synopsis,
@@ -61,9 +65,19 @@ class Rating(models.Model):
 
 class Show(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="shows")
-    theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
-    starts_at = models.DateTimeField()
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    theater = models.ForeignKey(Theater, on_delete=models.CASCADE, related_name="shows")
+    date = models.DateField(null=True)
+    starts_at = models.TimeField(null=True)
+    price = models.DecimalField(max_digits=7, decimal_places=2)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "theater": self.theater.name,
+            "date": self.date,
+            "starts_at": self.starts_at.strftime("%H:%M"),
+            "price": self.price
+        }
 
 
 class Reservation(models.Model):

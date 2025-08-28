@@ -8,34 +8,33 @@
   text-align: center;
 }
 
-.movie-data {
+.movie-container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: 2rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: 100%;
   margin-bottom: 2rem;
 }
 
-.movie-data img {
-  max-width: 280px;
+.movie-container img {
+  width: 280px;
+  max-width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  flex: 0 0 auto;   
 }
 
 .movie-info {
-  max-width: 500px;
+  width: 500px;
   text-align: left;
 }
 
-.movie-info h1 {
-  margin-bottom: 0.5rem;
-}
-
-.movie-info p {
-  margin: 0.25rem 0;
-}
+.movie-info h1 { margin-bottom: 0.5rem; }
+.movie-info p { margin: 0.25rem 0; }
 
 .movie-info a {
   display: inline-block;
@@ -48,20 +47,66 @@
   text-decoration: none;
   transition: background .2s ease;
 }
+.movie-info a:hover { background: #b20710; }
 
-.movie-info a:hover {
-  background: #b20710;
+.synopsis {                   
+  max-width: 800px;
+  text-align: left;
 }
+.synopsis h2 { margin-bottom: 0.5rem; }
+.synopsis p { line-height: 1.6; }
 
-.synopsis {
-  max-width: 700px;
+
+#schedule-container {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 1rem;
   text-align: left;
 }
 
-.synopsis h2 {
-  margin-bottom: 0.5rem;
+#schedule-container h3 {
+  margin: 0 0 .5rem 0;
 }
 
-.synopsis p {
-  line-height: 1.6;
+#date-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
 }
+
+.date-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 36px;
+  padding: 0 .8rem;
+  border-radius: 9999px;
+  background: #f2f2f2;
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s ease, transform .08s ease;
+}
+.date-btn:hover { background: #e9e9e9; }
+.date-btn:active { transform: translateY(1px); }
+
+.date-btn.active {
+  background: #E50914;
+  color: #fff;
+}
+
+@media (max-width: 720px) {
+  .movie-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .movie-info {
+    min-width: 0;
+    max-width: 700px;
+    text-align: left;
+  }
+}
+

@@ -6,24 +6,7 @@
 {% endblock %}
 
 {% block body %}
-    <div id="show-view">
-        <div class="movie-data">
-            <img src="{{ poster_url }}">
-            <div class="movie-info">
-                <h1>{{ title }}</h1>
-                {% if is_playing %}
-                    <p>Duration: {{ duration }} minutes</p>
-                {% else %}
-                    <p>Duration: TBA</p>
-                {% endif %}
-                <p>Rating: {{ rating_avg }}/5.00 ({{ rating_count }} Users)</p>
-                <a href="{{ trailer }}">Watch Trailer</a>
-            </div>
-        </div>
-        <div class="synopsis">
-            <h2>Synopsis</h2>
-            <p>{{ synopsis }}</p>
-        </div>
+    <div id="show-view" data-movie="{{ movie_id }}">
     </div>
 {% endblock %}
 

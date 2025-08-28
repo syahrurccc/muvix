@@ -3,28 +3,35 @@ import { viewMovies } from "./index.js";
 document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (event) => {
         const navigation = event.target.closest('#now-playing, #coming-soon');
-        if (!navigation) return;
-    
-        event.preventDefault();
-    
-        const tab = navigation.dataset.page;
-        const homeURL = navigation.getAttribute('href');
-    
-        if (onHomePage()) {
-            viewMovies(tab);
-    
-            const url = new URL(window.location.href);
-            url.searchParams.set('tab', tab);
-            history.replaceState(null, '', url.toString());
-        } else {
-            const url = new URL(homeURL, window.location.origin);
-            url.searchParams.set('tab', tab);
-            window.location.href = url.toString();
+        if (navigation) {
+            // Prevent reload
+            event.preventDefault();
+            
+            // Get clicked tab data and its href
+            const tab = navigation.dataset.tab;
+            const homeURL = navigation.getAttribute('href');
+            
+            if (onHomePage()) {
+                viewMovies(tab);
+                
+                // Create new URL object using the current URL
+                const url = new URL(location.href);
+                // Set the tab parameter of the URL to tab const, create one if doesn't exist
+                url.searchParams.set('tab', tab);
+                // Replace the old URL with new URL without reloading and adding history
+                history.replaceState(null, '', url.toString());
+            } else {
+                // Create URL object with the root of the URL, then add the homeURL
+                const url = new URL(homeURL, location.origin);
+                url.searchParams.set('tab', tab);
+                // Open the new URL
+                location.href = url.toString();
+            }
         }
     });
-
-})
+});
 
 function onHomePage() {
+    // Return bool to check if on homepage or not
     return !!document.querySelector('#now-playing-view, #coming-soon-view');
 }

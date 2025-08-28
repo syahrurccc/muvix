@@ -10,7 +10,7 @@ export async function viewMovies(type) {
 
     try {
 
-        const response = await fetch(`/movies/${type}`);
+        const response = await fetch(`/api/movies/${type}`);
 
         if (!response.ok) {
             const result = await response.json();

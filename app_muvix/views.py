@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -28,25 +29,46 @@ def fetch_movies(request, type):
 
 
 def movie_view(request, movie_id):
+
+    return render(request, "muvix/show.html", {"movie": movie_id})
+
+
+def movie_api(request, movie_id):
     
     try:
-        movie_data = Movie.objects.get(id=movie_id)
+        movie = Movie.objects.get(id=movie_id)
     except Movie.DoesNotExist:
         return HttpResponseRedirect("/")
 
-    return render(request, "muvix/show.html", {
-        "is_playing": movie_data.status == Movie.Status.PLAYING,
-        "id": movie_data.id,
-        "title": movie_data.title,
-        "trailer": movie_data.trailer,
-        "poster_url": movie_data.poster_url,
-        "synopsis": movie_data.synopsis,
-        "duration": movie_data.duration_min,
-        "rating_avg": movie_data.rating_avg,
-        "rating_count": movie_data.rating_count,
-        "theater": movie_data.shows.theater,
-
+    return JsonResponse({
+        "is_playing": movie.status == Movie.Status.PLAYING,
+        "movie_data": movie.serialize(),
     })
+
+
+def fetch_shows(request, movie_id):
+
+    try:
+        movie = Movie.objects.get(id=movie_id)
+    except Movie.DoesNotExist:
+        return HttpResponseRedirect("/")
+    
+    if date_str := request.GET.get("date"):
+        try:
+            date_obj = date.fromisoformat(date_str)
+        except ValueError:
+            return JsonResponse ({"error: Invalid date format"}, status=400)
+    
+    shows = movie.shows.filter(date=date_obj).select_related("theater").order_by("starts_at")
+    print(shows)
+
+    return JsonResponse([show.serialize() for show in shows], safe=False)
+
+
+
+@login_required(login_url="/login")
+def show_seats(request):
+    ...
 
 
 @login_required(login_url="/login")
