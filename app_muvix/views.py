@@ -60,24 +60,34 @@ def fetch_shows(request, movie_id):
             return JsonResponse ({"error: Invalid date format"}, status=400)
     
     shows = movie.shows.filter(date=date_obj).select_related("theater").order_by("starts_at")
-    print(shows)
 
     return JsonResponse([show.serialize() for show in shows], safe=False)
 
 
+@login_required(login_url="/login")
+def render_seats(request, show_id):
+    
+    try:
+        show = Show.objects.get(id=show_id)
+        seat_map = show.theater.seat_map_json
+    except Show.DoesNotExist:
+        return HttpResponseRedirect("/")
+
+    return JsonResponse(seat_map)
+
 
 @login_required(login_url="/login")
-def show_seats(request):
+def show_reserved_seats(request):
+    ...
+
+
+@login_required(login_url="/login")
+def reserve_seats(request):
     ...
 
 
 @login_required(login_url="/login")
 def my_tickets(request):
-    ...
-
-
-@login_required(login_url="/login")
-def booking(request):
     ...
 
 

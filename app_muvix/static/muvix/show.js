@@ -1,4 +1,5 @@
-import { createElement } from "react";
+const chosenSeats = new Map();
+const MAX_SEATS = 8;
 
 document.addEventListener('DOMContentLoaded', () => {
     const url = new URL(location.href)
@@ -21,12 +22,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.classList.remove('active');
             });
             showBtn.classList.add('active');
-            pickSeat(showBtn.id, showBtn.dataset.theater);
+            renderSeats(showBtn.id, showBtn.dataset.theater);
         }
+
+        const seat = event.target.closest('.seat.available, seat.selected');
+        if (!seat) return;
+        const seatId = seat.id;
+
+        if (chosenSeats.has(seatId)) {
+            chosenSeats.delete(seatId);
+            seat.classList.remove('selected');
+        } else if (chosenSeats.size < MAX_SEATS) {
+            chosenSeats.set(seatId, seat);
+            seat.classList.add('selected');
+        }
+
+        updateSeatList();
+        console.log(chosenSeats);
+
     });
 
     showMovieInfo(movieID);
 });
+
+
+function updateSeatList() {
+    
+    const seatList = document.querySelector('#seat-list');
+    if (seatList) {
+        const labels = [...chosenSeats.keys()];
+        seatList.innerHTML = `<strong>Seats:</strong> ${labels.join(', ')}`;
+    }
+}
+
 
 function getDates() {
     const dates = [];
@@ -100,9 +128,11 @@ async function showMovieInfo(movieID) {
                 dateContainer.append(dateEl);
             });
             const showContainer = document.createElement('div');
-            showContainer.id = 'show-container'
+            showContainer.id = 'show-container';
+            const seatContainer = document.createElement('div');
+            seatContainer.id = 'seat-container';
 
-            scheduleContainer.append(scheduleHeader, dateContainer, showContainer);
+            scheduleContainer.append(scheduleHeader, dateContainer, showContainer, seatContainer);
             document.querySelector('#show-view').append(scheduleContainer);
         }
         
@@ -115,12 +145,14 @@ async function getShows(movie, date) {
     
     const showContainer = document.querySelector('#show-container');
     showContainer.innerHTML = '';
+    const seatContainer = document.querySelector('#seat-container');
+    seatContainer.innerHTML = '';
     
     try {
         
 
         const today = new Date().toISOString().split("T")[0];
-        const response = await fetch(`/shows/movie/${movie}?date=${date || today}`)
+        const response = await fetch(`/shows/${movie}?date=${date || today}`)
 
         if (!response.ok) {
             const result = await response.json()
@@ -149,13 +181,81 @@ async function getShows(movie, date) {
     }
 }
 
-async function pickSeat(showId, theater) {
+async function renderSeats(showId, theater) {
+
+    const seatContainer = document.querySelector('#seat-container');
+    seatContainer.innerHTML = '';
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const seatSize = 24;
+    const gap = 8;
+
+    try {
+
+        const response = await fetch(`/shows/${showId}/seats`);
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.error);
+        }
+
+        const seatMapJson = await response.json();
+        const seatMap = seatMapJson.seat_map;
+        console.log(seatMap)
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("width", seatMap[0].length * (seatSize + gap));
+        svg.setAttribute("height", seatMap.length * (seatSize + gap));
+
+        const seatRow = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+        seatMap.forEach((row, r) => {
+            row.forEach((cell, c) => {
+            if (cell === 1) {
+                const circle = document.createElementNS(svgNS, "circle");
+
+                const x = c * (seatSize + gap) + seatSize / 2;
+                const y = r * (seatSize + gap) + seatSize / 2;
+
+                circle.setAttribute("cx", x);
+                circle.setAttribute("cy", y);
+                circle.setAttribute("r", seatSize / 2);
+
+                circle.setAttribute("class", "seat available");
+                circle.dataset.row = r;
+                circle.dataset.col = c;
+                circle.id = `${seatRow[r]}${c+1}`
+
+                svg.appendChild(circle);
+            }
+            });
+        });
+
+        const reservationInfo = document.createElement('div');
+        reservationInfo.id = 'reservation-info';
+        const bookBtn = document.createElement('a');
+        bookBtn.id = 'book-btn';
+        bookBtn.textContent = 'Book Tickets';
+        bookBtn.dataset.theater = theater;
+        const seatList = document.createElement('span');
+        seatList.id = 'seat-list';
+        reservationInfo.append(seatList, bookBtn);
+
+        seatContainer.append(svg);
+
+        document.querySelector('#show-view').append(seatContainer, reservationInfo);
+
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+
+async function reserveSeat(showId, theater) {
     
     try {
 
-        const response = await fetch(`/shows/movie/${showId}/seats?`)
+        const response = await fetch(`/shows/movie/${showId}/seats`);
 
-    } catch(e) {
-
+    } catch(err) {
+        console.error(err);
     }
 }
