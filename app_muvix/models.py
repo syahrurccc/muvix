@@ -10,7 +10,7 @@ class User(AbstractUser):
 
 class Theater(models.Model):
     name = models.CharField(max_length=12)
-    seat_map_json = models.JSONField(default=dict)
+    seat_map = models.TextField()
 
 
 class Seat(models.Model):
@@ -69,14 +69,18 @@ class Show(models.Model):
     date = models.DateField(null=True)
     starts_at = models.TimeField(null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2)
+    fee = models.DecimalField(max_digits=7, decimal_places=2)
 
     def serialize(self):
         return {
             "id": self.id,
+            "title": self.movie.title,
+            "poster_url": self.movie.poster_url,
             "theater": self.theater.name,
             "date": self.date,
             "starts_at": self.starts_at.strftime("%H:%M"),
-            "price": self.price
+            "price": self.price,
+            "fee": self.fee
         }
 
 

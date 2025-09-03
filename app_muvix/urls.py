@@ -16,5 +16,6 @@ urlpatterns = [
     path("shows/<int:movie_id>", views.fetch_shows, name="fetch_shows"),
     path("shows/<int:show_id>/seats", views.render_seats, name="render_seats"),
     path("shows/<int:show_id>/reserved_seats", views.show_reserved_seats, name="show_reserved_seats"),
+    path("shows/<int:show_id>/details", views.show_details, name="show_details"),
     path("shows/<int:show_id>/reserve", views.reserve_seats, name="reserve_seats"),
 ]

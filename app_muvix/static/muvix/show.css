@@ -1,4 +1,5 @@
-#show-view {
+#show-view,
+#booking-view {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -137,6 +138,67 @@
   }
 }
 
+#show-container {
+  max-width: 900px;
+  margin: 1rem auto;
+  text-align: left;
+}
+
+#time {
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.show-time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  height: 36px;
+  margin: 0 0.4rem 0.6rem;
+  padding: 0 1rem;
+
+  border-radius: 9999px;
+  background: #f2f2f2;
+  color: #222;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.show-time:hover {
+  background: #e5e5e5;
+}
+
+.show-time:active {
+  transform: translateY(1px);
+}
+
+.show-time.active {
+  background: #E50914;
+  color: #fff;
+}
+
+#booking-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1rem auto 2rem;
+  width: 100%;
+  max-width: 920px;
+  box-sizing: border-box;
+}
+
+#screen {
+  font-weight: bold;
+  margin-bottom: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+}
+
 .seat {
   fill: #f2f2f2;
   stroke: #f2f2f2;
@@ -153,7 +215,99 @@
   stroke: #c0392b;
 }
 
+text {
+  pointer-events: none;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
 #reservation-info {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 1rem;
 }
+
+/* Shared card style */
+#booking-details,
+#price-breakdown,
+#payment-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+}
+
+/* Booking details */
+#booking-details {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+#booking-details img {
+  width: 120px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#booking-details div span {
+  display: block;
+  margin-bottom: .3rem;
+}
+
+/* Price breakdown */
+#price-breakdown > div {
+  display: flex;
+  justify-content: space-between;
+  padding: .4rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+#price-breakdown > div:last-child {
+  border-bottom: none;
+  font-weight: bold;
+}
+
+/* Payment form */
+#payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+#payment-form label {
+  font-size: .9rem;
+  font-weight: 500;
+}
+
+#payment-form input[type="text"] {
+  padding: .6rem .8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+#confirm-payment {
+  margin-top: .5rem;
+  padding: .8rem;
+  background: #E50914;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+#confirm-payment:hover {
+  background: #b20710;
+}
+
 

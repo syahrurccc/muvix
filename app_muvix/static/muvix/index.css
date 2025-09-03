@@ -103,7 +103,7 @@ body {
 }
 
 .trailer-btn,
-.book-btn {
+#get-ticket {
   position: absolute;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
@@ -122,13 +122,13 @@ body {
 }
 
 .movie-card:hover .trailer-btn,
-.movie-card:hover .book-btn {
+.movie-card:hover #get-ticket {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
   pointer-events: auto;
 }
 
-.book-btn {
+#get-ticket {
   background: #E50914;
   color: #fff;
   bottom: 12px;

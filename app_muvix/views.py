@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Theater, Seat, Movie, Show
+from .models import User, Theater, Seat, Movie, Show, Reservation, ReservedSeat
 
 # Create your views here.
 def index(request):
@@ -69,16 +69,34 @@ def render_seats(request, show_id):
     
     try:
         show = Show.objects.get(id=show_id)
-        seat_map = show.theater.seat_map_json
+        seat_map = json.loads(show.theater.seat_map)
+        seat_ids = list(show.theater.seat.values_list("id", flat=True))
     except Show.DoesNotExist:
         return HttpResponseRedirect("/")
 
-    return JsonResponse(seat_map)
+    return JsonResponse({
+        "seatMap": seat_map, 
+        "seatIds": seat_ids
+        })
+
+# ini belom dipake v
+@login_required(login_url="/login")
+def show_reserved_seats(request, show_id):
+    reserved_ids = list(
+        ReservedSeat.objects.filter(show_id=show_id).values_list("seat_id", flat=True)
+    )
+    return JsonResponse({"reserved": reserved_ids})
 
 
 @login_required(login_url="/login")
-def show_reserved_seats(request):
-    ...
+def show_details(request, show_id):
+    
+    try:
+        show = Show.objects.get(id=show_id)
+    except Show.DoesNotExist:
+        return HttpResponseRedirect("/")
+    
+    return JsonResponse(show.serialize())
 
 
 @login_required(login_url="/login")
@@ -88,11 +106,6 @@ def reserve_seats(request):
 
 @login_required(login_url="/login")
 def my_tickets(request):
-    ...
-
-
-@login_required(login_url="/login")
-def payment(request):
     ...
 
 

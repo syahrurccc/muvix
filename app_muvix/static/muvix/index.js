@@ -39,7 +39,7 @@ export async function viewMovies(type) {
             trailerBtn.rel = 'noopener noreferrer';
 
             const bookBtn = document.createElement('a');
-            bookBtn.className = 'book-btn'
+            bookBtn.id = 'get-ticket';
             bookBtn.href = `/movies/${movie.id}`;
             bookBtn.textContent = 'Get Ticket';
 
