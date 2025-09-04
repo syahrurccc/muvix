@@ -85,21 +85,14 @@ class Show(models.Model):
 
 
 class Reservation(models.Model):
-
-    class Status(models.TextChoices):
-        HOLD = "HOLD"
-        CONFIRMED = "CONFIRMED"
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    show = models.ForeignKey(Show, on_delete=models.CASCADE)
-    status = models.CharField(max_length=10, choices=Status.choices)
-    hold_expires_at = models.DateTimeField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reservations")
+    show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="reservations")
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ReservedSeat(models.Model):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="seats")
-    show = models.ForeignKey(Show, on_delete=models.CASCADE)
+    show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="reserved_seats")
     seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
 
     class Meta:

@@ -205,8 +205,8 @@ async function renderSeats(showId) {
             throw new Error(result.error);
         }
 
-        const { seatMap, seatIds} = await response.json();
-        console.log(seatMap)
+        const { seatMap, seatIds, reservedIds} = await response.json();
+
         const svg = document.createElementNS(svgNS, 'svg');
         svg.setAttribute('width', seatMap[0].length * (seatSize + gap));
         svg.setAttribute('height', seatMap.length * (seatSize + gap));
@@ -224,11 +224,15 @@ async function renderSeats(showId) {
                 circle.setAttribute('cy', y);
                 circle.setAttribute('r', seatSize / 2);
 
-                circle.setAttribute('class', 'seat available');
                 circle.dataset.row = r;
                 circle.dataset.col = c;
                 circle.dataset.label = `${String.fromCharCode(65 + r)}${c + 1}`;
-                circle.id = seatIds[id++];
+                circle.id = seatIds[id];
+                if (reservedIds.includes(seatIds[id++])) {
+                    circle.setAttribute('class', 'seat booked');
+                } else {
+                    circle.setAttribute('class', 'seat available');
+                }
 
                 svg.appendChild(circle);
 
@@ -340,17 +344,49 @@ async function showBookingDetails(showId) {
         paymentForm.id = 'payment-form';
         paymentForm.innerHTML = `
             <label for="card-number">Card Number</label>
-            <input type="text" name="card-number" id="card-number" placeholder="1234 5678 9012 3456" required>
+            <input type="text" name="card-number" id="card-number" placeholder="1234 5678 9012 3456" required minlength="16" maxlength="16">
             <label for="expiry-date">Expiry Date</label>
-            <input type="text" name="expiry-date" id="expiry-date" placeholder="MM/YY" required>
+            <input type="text" name="expiry-date" id="expiry-date" placeholder="MM/YYYY" required minlength="7" maxlenght"7">
             <label for="CVV">CVV</label>
             <input type="text" name="cvv" id="cvv" placeholder="123" required>
             <label for="name">Cardholder Name</label>
-            <input type="text" name="name" id="cardholder-name" placeholder="John Doe" required>
-            <input id="confirm-payment" type="submit" value="Proceed Payment">`;
+            <input type="text" name="name" id="cardholder-name" placeholder="John Doe" required>`;
+        const paymentBtn = document.createElement('input');
+        paymentBtn.id = 'confirm-payment';
+        paymentBtn.type = 'submit';
+        paymentBtn.value = 'Proceed Payment';
+        paymentForm.append(paymentBtn);
         paymentContainer.append(paymentForm);
 
         document.querySelector('#booking-view').append(bookingDetails, priceBreakdown, paymentContainer);
+
+        paymentBtn.onclick = async (event) => {
+            event.preventDefault();
+            const cardNumber = document.querySelector('#card-number').value;
+            const expiryDate = document.querySelector('#expiry-date').value;
+            const cvv = document.querySelector('#cvv').value;
+            const cardholderName = document.querySelector('#cardholder-name').value;
+            const seatIds = [...chosenSeats.values()].map(seat => seat.id);
+
+            try {
+
+                const response = await fetch(`/shows/${showId}/reserve`, {
+                    method: 'POST',
+                    body: JSON.stringify({cardNumber, expiryDate, cvv, cardholderName, seatIds})
+                })
+
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+
+                console.log(result);
+
+            } catch(err) {
+                console.error(err)
+            }
+        }
 
     } catch(err) {
         console.error(err);
