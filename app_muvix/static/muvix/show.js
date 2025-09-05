@@ -1,3 +1,6 @@
+// TODO: FINISH ERROR HANDLING
+// TODO: FINISH SEAT ELEMENTS
+
 const chosenSeats = new Map();
 const MAX_SEATS = 8;
 
@@ -211,6 +214,7 @@ async function renderSeats(showId) {
         svg.setAttribute('width', seatMap[0].length * (seatSize + gap));
         svg.setAttribute('height', seatMap.length * (seatSize + gap));
 
+        // TODO: FINISH SEAT ELEMENTS
         let id = 0
         seatMap.forEach((row, r) => {
             row.forEach((cell, c) => {

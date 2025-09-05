@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from luhnchecker.luhn import Luhn
 
-from .models import User, Theater, Seat, Movie, Show, Reservation, ReservedSeat
+from .models import User, Seat, Movie, Show, Reservation, ReservedSeat
 
 
 def valid_expiry(expiry_date):
