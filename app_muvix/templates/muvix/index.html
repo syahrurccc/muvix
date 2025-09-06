@@ -6,16 +6,20 @@
     </div>
     <div id="coming-soon-view">
     </div>
+    <div id="tickets-view">
+    </div>
 {% endblock %}
 
 {% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
     <script type="module">
         import { viewMovies } from "{% static 'muvix/index.js' %}";
 
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(location.search);
-            const type = params.get('tab') === 'soon' ? 'soon' : 'playing';
-            viewMovies(type)
+            const type = params.get('tab')
+            const isMovieView = tab === 'playing' || tab === 'soon';
+            isMovieView ? viewMovies(tab) : viewTickets();
         });
     </script>
 {% endblock %}

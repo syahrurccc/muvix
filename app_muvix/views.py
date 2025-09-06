@@ -162,7 +162,11 @@ def reserve_seats(request, show_id):
 
 @login_required(login_url="/login")
 def my_tickets(request):
-    ...
+    
+    try:
+        reservations = Reservation.objects.filter(user=request.user).order_by("-created_at")
+    except Reservation.DoesNotExist:
+        return JsonResponse({"error": "Unable to book show reservations"}, status=400)
 
 
 def login_view(request):

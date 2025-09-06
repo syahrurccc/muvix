@@ -4,9 +4,11 @@ export async function viewMovies(type) {
     
     document.querySelector('#now-playing-view').innerHTML = '';
     document.querySelector('#coming-soon-view').innerHTML = '';
+    document.querySelector('#tickets-view').innerHTML = '';
 
     document.querySelector('#now-playing-view').style.display = isPlayingView ? 'block' : 'none';
     document.querySelector('#coming-soon-view').style.display = isPlayingView ? 'none' : 'block';
+    document.querySelector('#tickets-view').style.display = 'none';
 
     try {
 
@@ -52,4 +54,31 @@ export async function viewMovies(type) {
     } catch(error) {
         console.error(error)
     }
+}
+
+export async function viewTickets() {
+    
+    document.querySelector('#now-playing-view').innerHTML = '';
+    document.querySelector('#coming-soon-view').innerHTML = '';
+    document.querySelector('#tickets-view').innerHTML = '';
+
+    document.querySelector('#now-playing-view').style.display = 'none';
+    document.querySelector('#coming-soon-view').style.display = 'none';
+    document.querySelector('#tickets-view').style.display = 'block';
+
+    try {
+
+        const response = await fetch(`/api/tickets`)
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.error)
+        }
+
+        const reservations = await response.json();
+
+    } catch(err) {
+
+    }
+
 }

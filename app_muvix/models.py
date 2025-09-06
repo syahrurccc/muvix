@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.contrib.auth.models import AbstractUser
+from django.core import signing
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -88,6 +89,15 @@ class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reservations")
     show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="reservations")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "created_at": self.created_at.strftime("%b %d %Y, %I:%M %p"),
+            "show": self.show.serialize(),
+            "seats": [rs.seat.label for rs in self.seats.all()],
+            "ticket_code": signing.dumps({"id": self.id})
+        }
 
 
 class ReservedSeat(models.Model):

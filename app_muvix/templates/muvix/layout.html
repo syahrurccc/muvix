@@ -30,7 +30,7 @@
                 <div class="auth">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tickets' %}">My Tickets</a>
+                        <a class="nav-link" id="tickets" href="/" data-tab="ticket">My Tickets</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>

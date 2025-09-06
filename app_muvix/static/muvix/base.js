@@ -1,4 +1,5 @@
 import { viewMovies } from "./index.js";
+import { viewTickets } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (event) => {
@@ -9,10 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Get clicked tab data and its href
             const tab = navigation.dataset.tab;
+            const isMovieView = tab === 'playing' || tab === 'soon';
             const homeURL = navigation.getAttribute('href');
             
             if (onHomePage()) {
-                viewMovies(tab);
+                isMovieView ? viewMovies(tab) : viewTickets();
                 
                 // Create new URL object using the current URL
                 const url = new URL(location.href);
