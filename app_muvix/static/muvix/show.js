@@ -1,4 +1,3 @@
-// TODO: FINISH ERROR HANDLING
 // TODO: FINISH SEAT ELEMENTS
 
 const chosenSeats = new Map();
@@ -364,8 +363,13 @@ async function showBookingDetails(showId) {
 
         document.querySelector('#booking-view').append(bookingDetails, priceBreakdown, paymentContainer);
 
+        window.addEventListener('beforeunload', (event) => {
+                event.preventDefault();
+            });
+
         paymentBtn.onclick = async (event) => {
             event.preventDefault();
+
             const cardNumber = document.querySelector('#card-number').value;
             const expiryDate = document.querySelector('#expiry-date').value;
             const cvv = document.querySelector('#cvv').value;

@@ -1,9 +1,19 @@
-import { viewMovies } from "./index.js";
-import { viewTickets } from "./index.js";
+import { viewMovies, viewTickets } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    const params = new URLSearchParams(location.search);
+        const tab = params.get('tab');
+        if (onHomePage() && !tab) {
+            viewMovies('playing');
+        } else if (onHomePage() && tab) {
+            const isMovieView = tab === 'playing' || tab === 'soon';
+            isMovieView ? viewMovies(tab) : viewTickets();
+        }
+    
     document.addEventListener('click', (event) => {
-        const navigation = event.target.closest('#now-playing, #coming-soon');
+        
+        const navigation = event.target.closest('#now-playing, #coming-soon, #tickets');
         if (navigation) {
             // Prevent reload
             event.preventDefault();
@@ -29,6 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Open the new URL
                 location.href = url.toString();
             }
+        }
+
+        const viewQR = event.target.closest('.view-qr');
+        if (viewQR) {
+            const container = viewQR.closest('.reservation-container');
+            container.querySelector('.qrcode').classList.toggle('hidden');
         }
     });
 });

@@ -103,7 +103,7 @@ body {
 }
 
 .trailer-btn,
-#get-ticket {
+.get-ticket {
   position: absolute;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
@@ -122,13 +122,13 @@ body {
 }
 
 .movie-card:hover .trailer-btn,
-.movie-card:hover #get-ticket {
+.movie-card:hover .get-ticket {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
   pointer-events: auto;
 }
 
-#get-ticket {
+.get-ticket {
   background: #E50914;
   color: #fff;
   bottom: 12px;
@@ -139,4 +139,86 @@ body {
   color: #333;
   bottom: 60px;
 }
+
+#tickets-view {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reservation-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  transition: box-shadow .15s ease, border-color .15s ease;
+  min-width: 640px;
+}
+
+.reservation-container:hover {
+  border-color: #d9d9d9;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.reservation-poster {
+  width: 110px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  flex: 0 0 auto;
+}
+
+.reservation-details {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  color: #222;
+  flex: 1 1 auto;
+}
+
+.reservation-details span { 
+  display: block; 
+}
+
+.reservation-details strong { 
+  font-weight: 700; 
+}
+
+.view-qr {
+  margin-top: 6px;
+  color: #E50914;
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+  user-select: none;
+  transition: color .15s ease, transform .06s ease;
+}
+.view-qr:hover { 
+  color: #b20710; 
+}
+
+.qrcode {
+  flex: 0 0 auto;
+  padding: 8px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 136px;
+  min-height: 136px;
+}
+
+.hidden {
+  display: none !important;
+}
+
 

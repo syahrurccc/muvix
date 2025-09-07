@@ -1,11 +1,13 @@
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
+from django.db.models import Q, Prefetch
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from luhnchecker.luhn import Luhn
 
@@ -164,9 +166,24 @@ def reserve_seats(request, show_id):
 def my_tickets(request):
     
     try:
-        reservations = Reservation.objects.filter(user=request.user).order_by("-created_at")
+        now = timezone.localtime()
+        cutoff = now - timedelta(hours=2)
+
+        reservations = (
+            Reservation.objects
+            .filter(user=request.user)
+            .filter(
+                Q(show__date__gt=cutoff.date()) |
+                Q(show__date=cutoff.date(), show__starts_at__gte=cutoff.time())
+            )
+            .select_related('show', 'show__movie', 'show__theater')
+            .prefetch_related(Prefetch('seats', queryset=ReservedSeat.objects.select_related('seat'))).
+            order_by("-created_at")
+            )
     except Reservation.DoesNotExist:
         return JsonResponse({"error": "Unable to book show reservations"}, status=400)
+
+    return JsonResponse([r.serialize() for r in reservations], safe=False)
 
 
 def login_view(request):
