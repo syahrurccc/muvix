@@ -1,12 +1,10 @@
-from decimal import Decimal
 from django.contrib.auth.models import AbstractUser
 from django.core import signing
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 # Create your models here.
 class User(AbstractUser):
-    watchlist = models.ManyToManyField("Movie", related_name="watchlist", blank=True)
+    pass
 
 
 class Theater(models.Model):
@@ -35,8 +33,6 @@ class Movie(models.Model):
     synopsis = models.TextField(blank=True)
     trailer = models.URLField(blank=True)
     duration_min = models.CharField(default="TBA", blank=True)
-    rating_avg = models.DecimalField(default=Decimal(0.00), max_digits=3, decimal_places=2, editable=False)
-    rating_count = models.PositiveIntegerField(default=0, editable=False)
     status = models.CharField(max_length=12, choices=Status.choices)
 
     def serialize(self):
@@ -50,18 +46,7 @@ class Movie(models.Model):
             "poster_url": self.poster_url,
             "synopsis": self.synopsis,
             "duration": self.duration_min,
-            "rating_avg": self.rating_avg,
-            "rating_count": self.rating_count
         }
-
-
-class Rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ratings")
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="ratings")
-    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-
-    class Meta:
-        constraints = [models.UniqueConstraint(fields=["user", "movie"], name="unique_review")]
 
 
 class Show(models.Model):
@@ -93,15 +78,14 @@ class Reservation(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "created_at": self.created_at.strftime("%b %d %Y, %I:%M %p"),
             "show": self.show.serialize(),
-            "seats": [rs.seat.label for rs in self.seats.all()],
+            "seats": [rs.seat.label for rs in self.reserved_seats.all()],
             "ticket_code": signing.dumps({"id": self.id})
         }
 
 
 class ReservedSeat(models.Model):
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="seats")
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="reserved_seats")
     show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="reserved_seats")
     seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
 

@@ -53,3 +53,18 @@ function onHomePage() {
     // Return bool to check if on homepage or not
     return !!document.querySelector('#now-playing-view, #coming-soon-view');
 }
+
+export function showError(error) {
+
+	const alert = document.createElement('div');
+
+    alert.classList.add('alert', 'alert-danger');
+	alert.setAttribute('role', 'alert');
+
+	alert.textContent = error;
+
+	document.querySelector('body').prepend(alert);
+	alert.style.animationPlayState = 'running';
+
+	setTimeout(() => alert.remove(), 3000);
+}

@@ -1,4 +1,4 @@
-// TODO: FINISH SEAT ELEMENTS
+import { showError } from "./base.js";
 
 const chosenSeats = new Map();
 const MAX_SEATS = 8;
@@ -52,6 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     showMovieInfo(movieID);
 });
 
+function preventUnload(event) {
+    event.preventDefault();
+}
 
 function updateSeatList() {
     const seatList = document.querySelector('#seat-list');
@@ -80,6 +83,9 @@ async function showMovieInfo(movieID) {
 
         if (!response.ok) {
             const result = await response.json();
+            if (result.redirect) {
+                setTimeout(() => {location.href = result.redirect;}, 2000);
+            }
             throw new Error(result.error);
         }
 
@@ -98,7 +104,6 @@ async function showMovieInfo(movieID) {
             <p>Stars: ${movie_data.stars}</p>
             <p>Genre: ${movie_data.genre}</p>
             <p>Duration: ${ movie_data.duration } minutes</p>
-            <p>Rating: ${movie_data.rating_avg}/5.00 (${movie_data.rating_count} Users)</p>
             <a href='${movie_data.trailer}' target='_blank' rel='noopener noreferrer'>Watch Trailer</a>`;
 
         movieContainer.append(poster, movieInfo);
@@ -140,8 +145,9 @@ async function showMovieInfo(movieID) {
             document.querySelector('#show-view').append(scheduleContainer);
         }
         
-    } catch(e) {
-        console.error(e.error)
+    } catch(err) {
+        console.error(err);
+        showError(err.message);
     }
 }
 
@@ -158,10 +164,14 @@ async function getShows(movie, date) {
 
         if (!response.ok) {
             const result = await response.json()
+            if (result.redirect) {
+                setTimeout(() => {location.href = result.redirect;}, 2000);
+            }
             throw new Error(result.error)
         }
 
         const shows = await response.json();
+
         const buffer = document.createElement('div');
         buffer.id = 'show-container';
         const time = document.createElement('p');
@@ -182,8 +192,9 @@ async function getShows(movie, date) {
 
         showContainer.replaceWith(buffer);
 
-    } catch(e) {
-        console.error(e.error)
+    } catch(err) {
+        console.error(err);
+        showError(err.message);
     }
 }
 
@@ -204,6 +215,9 @@ async function renderSeats(showId) {
 
         if (!response.ok) {
             const result = await response.json();
+            if (result.redirect) {
+                setTimeout(() => {location.href = result.redirect;}, 2000);
+            }
             throw new Error(result.error);
         }
 
@@ -213,7 +227,6 @@ async function renderSeats(showId) {
         svg.setAttribute('width', seatMap[0].length * (seatSize + gap));
         svg.setAttribute('height', seatMap.length * (seatSize + gap));
 
-        // TODO: FINISH SEAT ELEMENTS
         let id = 0
         seatMap.forEach((row, r) => {
             row.forEach((cell, c) => {
@@ -272,6 +285,7 @@ async function renderSeats(showId) {
 
     } catch(err) {
         console.error(err);
+        showError(err.message);
     }
 }
 
@@ -286,6 +300,9 @@ async function showBookingDetails(showId) {
 
         if (!response.ok) {
             const result = await response.json();
+            if (result.redirect) {
+                setTimeout(() => {location.href = result.redirect;}, 2000);
+            }
             throw new Error(result.error);
         }
 
@@ -350,9 +367,9 @@ async function showBookingDetails(showId) {
             <input type="text" name="card-number" id="card-number" placeholder="1234 5678 9012 3456" required minlength="16" maxlength="16">
             <label for="expiry-date">Expiry Date</label>
             <input type="text" name="expiry-date" id="expiry-date" placeholder="MM/YYYY" required minlength="7" maxlenght"7">
-            <label for="CVV">CVV</label>
+            <label for="cvv">CVV</label>
             <input type="text" name="cvv" id="cvv" placeholder="123" required>
-            <label for="name">Cardholder Name</label>
+            <label for="cardholder-name">Cardholder Name</label>
             <input type="text" name="name" id="cardholder-name" placeholder="John Doe" required>`;
         const paymentBtn = document.createElement('input');
         paymentBtn.id = 'confirm-payment';
@@ -363,9 +380,8 @@ async function showBookingDetails(showId) {
 
         document.querySelector('#booking-view').append(bookingDetails, priceBreakdown, paymentContainer);
 
-        window.addEventListener('beforeunload', (event) => {
-                event.preventDefault();
-            });
+        // Prevent user from closing the page
+        window.addEventListener('beforeunload', preventUnload);
 
         paymentBtn.onclick = async (event) => {
             event.preventDefault();
@@ -390,9 +406,20 @@ async function showBookingDetails(showId) {
                 }
 
                 console.log(result);
+                const alert = document.createElement('div');
+                alert.classList.add('alert', 'alert-primary');
+                alert.setAttribute('role', 'alert');
+                alert.textContent = result.message;
+                document.querySelector('body').prepend(alert);
+                alert.style.animationPlayState = 'running';
+
+                // Allow redirect then redirect to home
+                window.removeEventListener('beforeunload', preventUnload);
+                setTimeout(() => {location.href = "/"}, 4000);
 
             } catch(err) {
-                console.error(err)
+                console.error(err);
+                showError(err.message);
             }
         }
 

@@ -1,3 +1,5 @@
+import { showError } from "./base.js";
+
 export async function viewMovies(type) {
 
     const isPlayingView = type === 'playing';
@@ -22,8 +24,22 @@ export async function viewMovies(type) {
         const movies = await response.json();
         console.log(movies);
 
+        const homepageContainer = document.createElement('div');
+        homepageContainer.id = 'homepage-container';
+
+        const homepageHeader = document.createElement('div');
+        homepageHeader.id = 'homepage-header';
+        homepageHeader.innerHTML = `
+        <h1>Book Your Tickets, Now!</h1>
+        <h2>Cheap. Fast. Easy. Only on <span style="color: #E50914">Muvix</span>.</h2>`;
+        
+        const movieContainerLabel = document.createElement('h3');
+        movieContainerLabel.id = 'movie-label';
+        movieContainerLabel.textContent = isPlayingView ? 'Now Playing' : 'Coming Soon';
+
         const movieContainer = document.createElement('div');
-        movieContainer.className = 'movie-container'; 
+        movieContainer.className = 'movie-container';
+        
         movies.forEach(movie => {
             const movieCard = document.createElement('div');
             movieCard.className = 'movie-card';
@@ -49,10 +65,12 @@ export async function viewMovies(type) {
             movieContainer.append(movieCard);
         });
 
-        document.querySelector(isPlayingView ? '#now-playing-view' : '#coming-soon-view').append(movieContainer);
+        homepageContainer.append(homepageHeader, movieContainerLabel, movieContainer);
+        document.querySelector(isPlayingView ? '#now-playing-view' : '#coming-soon-view').append(homepageContainer);
 
-    } catch(error) {
-        console.error(error)
+    } catch(err) {
+        console.error(err);
+        showError(err.message);
     }
 }
 
@@ -72,6 +90,9 @@ export async function viewTickets() {
 
         if (!response.ok) {
             const result = await response.json();
+            if (result.redirect) {
+                location.href = result.redirect;
+            }
             throw new Error(result.error)
         }
 
@@ -115,7 +136,7 @@ export async function viewTickets() {
         });
 
     } catch(err) {
-        console.error(err)
+        console.error(err);
+        showError(err.message);
     }
-
 }

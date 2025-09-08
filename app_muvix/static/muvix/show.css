@@ -304,4 +304,28 @@ text {
   background: #b20710;
 }
 
+@keyframes hide {
+  0% {
+      opacity: 1;
+  }
+  25% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+  }
+}
 
+.alert {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 100%;
+  max-width: 800px;
+  z-index: 999;
+  animation-name: hide;
+  animation-duration: 5s;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
