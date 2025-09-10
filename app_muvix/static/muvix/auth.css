@@ -1,0 +1,51 @@
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.background img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  filter: blur(8px) brightness(0.4);
+}
+
+.auth-wrapper {
+  min-height: 90vh;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.auth-container {
+  width: 400px;
+  text-align: left;
+  margin-left: 1rem;
+}
+
+.auth-container h2,
+.auth-container p {
+  color: rgb(255, 255, 255);
+}
+
+a { 
+  text-decoration: none;
+  color: #E50914; 
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.form-group, p {
+  margin: 1rem auto;
+}

@@ -14,6 +14,7 @@ from .models import User, Seat, Movie, Show, Reservation, ReservedSeat
 
 
 def valid_expiry(expiry_date):
+    """Return true if expiry date is valid, else return false"""
 
     date = expiry_date.split("/")
     try:
@@ -38,6 +39,7 @@ def index(request):
     return render(request, "muvix/index.html")
 
 def fetch_movies(request, type):
+    """Fetch movies to display on homepage"""
 
     if type == "playing":
         movies = Movie.objects.filter(status=Movie.Status.PLAYING)
@@ -55,7 +57,8 @@ def movie_view(request, movie_id):
 
 
 def movie_api(request, movie_id):
-    
+    """Get moview details"""
+
     try:
         movie = Movie.objects.get(id=movie_id)
     except Movie.DoesNotExist:
@@ -68,6 +71,7 @@ def movie_api(request, movie_id):
 
 
 def fetch_shows(request, movie_id):
+    """Get shows for the viewed movie"""
 
     try:
         movie = Movie.objects.get(id=movie_id)
@@ -86,7 +90,8 @@ def fetch_shows(request, movie_id):
 
 
 def render_seats(request, show_id):
-    
+    """Get the seat map for the show"""
+
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Please log in first.", "redirect": "/login"}, status=401)
 
@@ -94,6 +99,7 @@ def render_seats(request, show_id):
         show = Show.objects.get(id=show_id)
         seat_map = json.loads(show.theater.seat_map)
         seat_ids = list(show.theater.seat.values_list("id", flat=True))
+        # Get reserved seats, if any
         reserved_ids = list(ReservedSeat.objects.filter(show_id=show_id).values_list("seat_id", flat=True))
     except Show.DoesNotExist:
         return JsonResponse({"error": "Show doesn't exists. You will be redirected in a moment.", "redirect": "/"}, status=404)
@@ -106,6 +112,7 @@ def render_seats(request, show_id):
 
 
 def booking_details(request, show_id):
+    """Get show details for booking page"""
 
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Please log in first.", "redirect": "/login"}, status=401)
@@ -156,9 +163,11 @@ def reserve_seats(request, show_id):
     # Process the reservation atomically
     with transaction.atomic():
         reservation = Reservation.objects.create(user=request.user, show=show)
-        
+
+        # Create bulks of ReservedSeat objects for every seat     
         rs = [ReservedSeat(reservation=reservation, show=show, seat=seat) for seat in seats]
         try:
+            # Create all of them in one line
             ReservedSeat.objects.bulk_create(rs)
         except IntegrityError:
             transaction.set_rollback(True)
@@ -168,14 +177,19 @@ def reserve_seats(request, show_id):
 
 
 def my_tickets(request):
+    """Get booked tickets"""
     
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Please log in first.", "redirect": "/login"}, status=401)
 
     try:
+        # Only show tickets at MAX 2 hours after showtime
         now = timezone.localtime()
         cutoff = now - timedelta(hours=2)
 
+        # Queryset are filtered by date first then by time, the Q class is a helper to add OR to the filter
+        # select_related and prefetch_related are used to avoid N+1 problem because the data exists on different models
+        # so the ORM can just get them in one go like using SQL command
         reservations = (
             Reservation.objects
             .filter(user=request.user)

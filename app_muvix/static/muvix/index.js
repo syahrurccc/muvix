@@ -30,8 +30,8 @@ export async function viewMovies(type) {
         const homepageHeader = document.createElement('div');
         homepageHeader.id = 'homepage-header';
         homepageHeader.innerHTML = `
-        <h1>Book Your Tickets, Now!</h1>
-        <h2>Cheap. Fast. Easy. Only on <span style="color: #E50914">Muvix</span>.</h2>`;
+            <h1>Book Your Tickets, Now!</h1>
+            <h2>Cheap. Fast. Easy. Only on <span style="color: #E50914">Muvix</span>.</h2>`;
         
         const movieContainerLabel = document.createElement('h3');
         movieContainerLabel.id = 'movie-label';
@@ -59,7 +59,7 @@ export async function viewMovies(type) {
             const bookBtn = document.createElement('a');
             bookBtn.className = 'get-ticket';
             bookBtn.href = `/movies/${movie.id}`;
-            bookBtn.textContent = 'Get Ticket';
+            bookBtn.textContent = isPlayingView ? 'Get Tickets' : 'See Details';
 
             movieCard.append(poster, trailerBtn, bookBtn);
             movieContainer.append(movieCard);

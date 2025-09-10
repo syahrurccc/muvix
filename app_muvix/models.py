@@ -89,6 +89,7 @@ class ReservedSeat(models.Model):
     show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="reserved_seats")
     seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
 
+    # Limit each seat to belong to a show
     class Meta:
         constraints = [models.UniqueConstraint(fields=["show", "seat"], name="unique_seat")] 
 

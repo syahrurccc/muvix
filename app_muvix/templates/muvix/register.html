@@ -1,7 +1,13 @@
 {% extends "muvix/layout.html" %}
 {% load static %}
 
+{% block stylings %}
+    <link href="{% static 'muvix/auth.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
+    <div class="background"><img src="{% static 'muvix/background.jpg' %}"></div>
+
     <div class="auth-wrapper">
         <div class="auth-container">
             <h2>Register</h2>

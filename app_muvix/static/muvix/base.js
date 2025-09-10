@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
             isMovieView ? viewMovies(tab) : viewTickets();
         }
     
+    const nav = document.querySelector('.navbar');
+    const toggle = nav.querySelector('.nav-toggle');
+    const menu = nav.querySelector('.nav-menu');
+
+    toggle.addEventListener('click', () => {
+        const open = menu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    
     document.addEventListener('click', (event) => {
         
         const navigation = event.target.closest('#now-playing, #coming-soon, #tickets');

@@ -309,9 +309,11 @@ async function showBookingDetails(showId) {
         const show = await response.json();
         console.log(show)
 
+        const bookingContainer = document.createElement('div');
+        bookingContainer.id = 'booking-details-container';
+        bookingContainer.innerHTML = '<span>Booking Details</span>';
         const bookingDetails = document.createElement('div');
         bookingDetails.id = 'booking-details';
-        bookingDetails.textContent = 'Booking Details';
 
         const poster = document.createElement('img');
         poster.src = show.poster_url;
@@ -331,10 +333,11 @@ async function showBookingDetails(showId) {
             <span>Showtime: ${show.starts_at}</span>
             <span><strong>Seats :</strong> ${labels.join(', ')}</span>`;
         bookingDetails.append(poster, showDetails);
+        bookingContainer.append(bookingDetails);
 
         const priceBreakdown = document.createElement('div');
         priceBreakdown.id = 'price-breakdown'
-        priceBreakdown.textContent = 'Price Breakdown';
+        priceBreakdown.innerHTML = '<span>Price Breakdown</span>';
 
         const ticketPrice = Number(show.price);
         const ticketTotal = ticketPrice * labels.length;
@@ -343,22 +346,22 @@ async function showBookingDetails(showId) {
 
         const priceEl = document.createElement('div');
         priceEl.innerHTML = `
-        <span>${labels.length} x Ticket @ Rp${ticketPrice}</span>
-        <span>Rp${ticketTotal}</span>`;
+            <span>${labels.length} x Ticket @ Rp${ticketPrice}</span>
+            <span>Rp${ticketTotal}</span>`;
         const feeEl = document.createElement('div');
         feeEl.innerHTML = `
-        <span>Service Fee</span>
-        <span>Rp${serviceFee}</span>`;
+            <span>Service Fee</span>
+            <span>Rp${serviceFee}</span>`;
         const totalEl = document.createElement('div');
         totalEl.innerHTML = `
-        <span><strong>Total</strong></span>
-        <span>Rp${finalTotal}</span>`;
+            <span><strong>Total</strong></span>
+            <span>Rp${finalTotal}</span>`;
 
         priceBreakdown.append(priceEl, feeEl, totalEl);
 
         const paymentContainer = document.createElement('div');
         paymentContainer.id = 'payment-container';
-        paymentContainer.textContent = 'Payment Information';
+        paymentContainer.innerHTML = '<span>Payment Information</span>';
 
         const paymentForm = document.createElement('form');
         paymentForm.id = 'payment-form';
@@ -366,7 +369,7 @@ async function showBookingDetails(showId) {
             <label for="card-number">Card Number</label>
             <input type="text" name="card-number" id="card-number" placeholder="1234 5678 9012 3456" required minlength="16" maxlength="16">
             <label for="expiry-date">Expiry Date</label>
-            <input type="text" name="expiry-date" id="expiry-date" placeholder="MM/YYYY" required minlength="7" maxlenght"7">
+            <input type="text" name="expiry-date" id="expiry-date" placeholder="MM/YYYY" required minlength="7" maxlength"7">
             <label for="cvv">CVV</label>
             <input type="text" name="cvv" id="cvv" placeholder="123" required>
             <label for="cardholder-name">Cardholder Name</label>
@@ -378,7 +381,7 @@ async function showBookingDetails(showId) {
         paymentForm.append(paymentBtn);
         paymentContainer.append(paymentForm);
 
-        document.querySelector('#booking-view').append(bookingDetails, priceBreakdown, paymentContainer);
+        document.querySelector('#booking-view').append(bookingContainer, priceBreakdown, paymentContainer);
 
         // Prevent user from closing the page
         window.addEventListener('beforeunload', preventUnload);
