@@ -4,8 +4,10 @@ const chosenSeats = new Map();
 const MAX_SEATS = 8;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Get the movieId from URL because page is rendered dynamically
     const url = new URL(location.href)
     const movieID = url.pathname.split('/').pop();
+
     document.querySelector('#show-view').addEventListener('click', (event) => {
         const dateBtn = event.target.closest('.date-btn');
         if (dateBtn) {
@@ -44,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const bookBtn = event.target.closest('#book-btn');
         if (bookBtn && chosenSeats.size !== 0) {
-            event.preventDefault();
             showBookingDetails(bookBtn.dataset.show);
         }
     });
@@ -64,6 +65,7 @@ function updateSeatList() {
 }
 
 function getDates() {
+    // Return date in iso format as string
     const dates = [];
     const today = new Date();
 
@@ -83,6 +85,7 @@ async function showMovieInfo(movieID) {
 
         if (!response.ok) {
             const result = await response.json();
+            // Redirect after 2 seconds
             if (result.redirect) {
                 setTimeout(() => {location.href = result.redirect;}, 2000);
             }
@@ -118,6 +121,7 @@ async function showMovieInfo(movieID) {
 
         document.querySelector('#show-view').append(movieContainer, synopsisEl);
 
+        // Only show showtimes if movie is playing
         if (is_playing) {
             const scheduleContainer = document.createElement('div');
             scheduleContainer.id = 'schedule-container';
@@ -153,14 +157,14 @@ async function showMovieInfo(movieID) {
 
 async function getShows(movie, date) {
     
+    // Empty containers everytime show time is clicked
     const showContainer = document.querySelector('#show-container');
     document.querySelector('#booking-container').innerHTML = '';
     chosenSeats.clear();
     
     try {
         
-        const today = new Date().toISOString().split('T')[0];
-        const response = await fetch(`/shows/${movie}?date=${date || today}`)
+        const response = await fetch(`/shows/${movie}?date=${date}`)
 
         if (!response.ok) {
             const result = await response.json()
@@ -172,6 +176,8 @@ async function getShows(movie, date) {
 
         const shows = await response.json();
 
+        // Since show container is generated in advance, a dummy element needs to be made
+        // to switch place with it because appending put it on the bottom instead
         const buffer = document.createElement('div');
         buffer.id = 'show-container';
         const time = document.createElement('p');
@@ -205,6 +211,7 @@ async function renderSeats(showId) {
     const seatContainer = document.createElement('div');
     seatContainer.id = '#seat-container';
 
+    // Declare SVG namespace
     const svgNS = 'http://www.w3.org/2000/svg';
     const seatSize = 40;
     const gap = 8;
@@ -221,13 +228,13 @@ async function renderSeats(showId) {
             throw new Error(result.error);
         }
 
-        const { seatMap, seatIds, reservedIds} = await response.json();
+        const { seatMap, seatIds, reservedIds } = await response.json();
 
         const svg = document.createElementNS(svgNS, 'svg');
         svg.setAttribute('width', seatMap[0].length * (seatSize + gap));
         svg.setAttribute('height', seatMap.length * (seatSize + gap));
 
-        let id = 0
+        let id = 0;
         seatMap.forEach((row, r) => {
             row.forEach((cell, c) => {
             if (cell === 1) {
@@ -307,7 +314,6 @@ async function showBookingDetails(showId) {
         }
 
         const show = await response.json();
-        console.log(show)
 
         const bookingContainer = document.createElement('div');
         bookingContainer.id = 'booking-details-container';
@@ -408,7 +414,7 @@ async function showBookingDetails(showId) {
                     throw new Error(result.error);
                 }
 
-                console.log(result);
+                // Show success message
                 const alert = document.createElement('div');
                 alert.classList.add('alert', 'alert-primary');
                 alert.setAttribute('role', 'alert');

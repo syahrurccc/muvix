@@ -22,7 +22,6 @@ export async function viewMovies(type) {
         }
 
         const movies = await response.json();
-        console.log(movies);
 
         const homepageContainer = document.createElement('div');
         homepageContainer.id = 'homepage-container';
@@ -53,6 +52,7 @@ export async function viewMovies(type) {
             trailerBtn.className = 'trailer-btn';
             trailerBtn.href = `${movie.trailer}`;
             trailerBtn.textContent = 'Watch Trailer';
+            // Opens the link on another tab
             trailerBtn.target = '_blank';
             trailerBtn.rel = 'noopener noreferrer';
 
@@ -97,7 +97,7 @@ export async function viewTickets() {
         }
 
         const reservations = await response.json();
-        console.log(reservations);
+
         reservations.forEach(reservation => {
             const reservationContainer = document.createElement('div');
             reservationContainer.className = 'reservation-container';
@@ -106,6 +106,7 @@ export async function viewTickets() {
             poster.className = 'reservation-poster';
             poster.src = reservation.show.poster_url;
 
+            // Format the date to readable format
             const date = new Date(reservation.show.date);
             const dateFormat = date.toLocaleDateString("en-GB", {
                 year: "numeric",
@@ -122,6 +123,7 @@ export async function viewTickets() {
                 <span><strong>Seats :</strong> ${reservation.seats.join(', ')}</span>
                 <span class="view-qr">See QR Code</span>`;
 
+            // Generate QR using ticket code generated from the API
             const qrcode = document.createElement('div');
             qrcode.classList.add('qrcode', 'hidden');
             new QRCode(qrcode, {

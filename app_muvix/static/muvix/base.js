@@ -2,19 +2,21 @@ import { viewMovies, viewTickets } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Open 'Now Playing' page on default else if tab params exists
     const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
         if (onHomePage() && !tab) {
             viewMovies('playing');
         } else if (onHomePage() && tab) {
             const isMovieView = tab === 'playing' || tab === 'soon';
-            isMovieView ? viewMovies(tab) : viewTickets();
+            isMovieView ? viewMovies(tab) : tab === 'tickets' ? viewTickets() : location.href = '/';
         }
     
     const nav = document.querySelector('.navbar');
     const toggle = nav.querySelector('.nav-toggle');
     const menu = nav.querySelector('.nav-menu');
-
+    
+    // Toggle dropdown menu
     toggle.addEventListener('click', () => {
         const open = menu.classList.toggle('open');
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -51,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Toggle QR
         const viewQR = event.target.closest('.view-qr');
         if (viewQR) {
             const container = viewQR.closest('.reservation-container');
