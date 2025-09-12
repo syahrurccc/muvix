@@ -2,7 +2,7 @@ import { viewMovies, viewTickets } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Open 'Now Playing' page on default else if tab params exists
+    // Open 'Now Playing' page on default except if tab params exists
     const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
         if (onHomePage() && !tab) {

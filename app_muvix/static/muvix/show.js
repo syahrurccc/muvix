@@ -424,7 +424,7 @@ async function showBookingDetails(showId) {
 
                 // Allow redirect then redirect to home
                 window.removeEventListener('beforeunload', preventUnload);
-                setTimeout(() => {location.href = "/"}, 4000);
+                setTimeout(() => {location.href = "/?tab=tickets"}, 4000);
 
             } catch(err) {
                 console.error(err);

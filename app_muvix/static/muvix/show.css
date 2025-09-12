@@ -89,13 +89,13 @@
 }
 
 #schedule-container h3 {
-  margin: 0 0 .5rem 0;
+  margin: 0 0 0.5rem 0;
 }
 
 #date-container {
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .date-btn {
@@ -104,14 +104,14 @@
   justify-content: center;
   min-width: 44px;
   height: 36px;
-  padding: 0 .8rem;
+  padding: 0 0.8rem;
   border-radius: 9999px;
   background: #f2f2f2;
   color: #111;
   font-weight: 600;
   cursor: pointer;
   user-select: none;
-  transition: background .15s ease, transform .08s ease;
+  transition: background 0.15s ease, transform 0.08s ease;
 }
 
 .date-btn:hover { 
@@ -230,7 +230,6 @@ text {
   padding: 1rem;
 }
 
-/* ===== Section cards ===== */
 #booking-details-container,
 #price-breakdown,
 #payment-container {
@@ -245,17 +244,15 @@ text {
   box-sizing: border-box;
 }
 
-/* Section titles (the first <span> in each block) */
 #booking-details-container > span:first-child,
 #price-breakdown > span:first-child,
 #payment-container > span:first-child {
   display: block;
   font-weight: 800;
   font-size: 1.05rem;
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
 }
 
-/* ===== Booking details: poster + info ===== */
 #booking-details {
   display: flex;
   align-items: flex-start;
@@ -264,17 +261,17 @@ text {
 
 #booking-details img {
   width: 140px;
-  height: 210px;          /* 2:3 aspect */
+  height: 210px;
   object-fit: cover;
   border-radius: 8px;
-  flex-shrink: 0;         /* don’t shrink the poster */
+  flex-shrink: 0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 #booking-details > div {
   display: flex;
   flex-direction: column;
-  gap: .4rem;
+  gap: 0.4rem;
   font-size: 0.95rem;
   color: #333;
 }
@@ -283,70 +280,82 @@ text {
   font-weight: 700;
 }
 
-
-/* ===== Price breakdown: tidy 2-column rows ===== */
 #price-breakdown > div {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: .45rem 0;
+  padding: 0.45rem 0;
   border-bottom: 1px solid #f0f0f0;
 }
+
 #price-breakdown > div:last-child {
   border-bottom: 0;
   padding-bottom: 0;
 }
-#price-breakdown > div:last-child span:first-child { font-weight: 800; }
-#price-breakdown > div:last-child span:last-child { font-weight: 900; }
+
+#price-breakdown > div:last-child span:first-child { 
+  font-weight: 800; 
+}
+
+#price-breakdown > div:last-child span:last-child { 
+  font-weight: 900; 
+}
+
 #price-breakdown > div span:last-child {
-  min-width: 120px;          /* align amounts */
+  min-width: 120px;
   text-align: right;
   white-space: nowrap;
   margin-left: 1rem;
 }
 
-/* ===== Payment form ===== */
 #payment-form {
   display: flex;
   flex-direction: column;
-  gap: .6rem;
+  gap: 0.6rem;
 }
+
 #payment-form label {
   font-size: .9rem;
   font-weight: 600;
   color: #555;
 }
+
 #payment-form input[type="text"] {
-  padding: .65rem .8rem;
+  padding: 0.65rem 0.8rem;
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   font: inherit;
   outline: none;
-  transition: border-color .15s ease, box-shadow .15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   background: #fafafa;
 }
+
 #payment-form input[type="text"]:focus {
   border-color: #e50914;
   box-shadow: 0 0 0 3px rgba(229,9,20,.15);
   background: #fff;
 }
 
-/* Submit button */
 #confirm-payment {
-  margin-top: .25rem;
-  padding: .8rem 1rem;
+  margin-top: 0.25rem;
+  padding: 0.8rem 1rem;
   background: #E50914;
   color: #fff;
   font-weight: 800;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background .15s ease, transform .06s ease;
+  transition: background 0.15s ease, transform 0.06s ease;
 }
-#confirm-payment:hover { background: #b20710; }
-#confirm-payment:active { transform: translateY(1px); }
 
-/* ===== Mobile tweaks ===== */
+#confirm-payment:hover { 
+  background: #b20710; 
+}
+
+#confirm-payment:active { 
+  transform: translateY(1px); 
+}
+
 @media (max-width: 640px) {
   #booking-details {
     grid-template-columns: 1fr;
@@ -358,7 +367,7 @@ text {
   }
   #price-breakdown > div span:last-child {
     min-width: auto;
-    margin-left: .5rem;
+    margin-left: 0.5rem;
   }
 }
 
